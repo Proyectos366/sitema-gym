@@ -16,6 +16,7 @@ export default function Registro() {
     const [validarNombre, setValidarNombre] = useState(false);
     const [validarCorreo, setValidarCorreo] = useState(false);
     const [validarClave, setValidarClave] = useState(false);
+    const [todosUsuarios, setTodosUsuarios] = useState("")
 
     const [mensajeFont, setMensajeFront] = useState("");
 
@@ -56,6 +57,8 @@ export default function Registro() {
                 ]);
             } catch (error) {
                 console.log("Error, al crear el usuario: " + error);
+                console.log(error?.response?.data);
+                
                 abrirMensaje(error?.response?.data?.message);
                 ejecutarAccionesConRetraso([
                     { accion: cerrarModal, tiempo: 3000 }, // Se ejecutará en 3 segundos
