@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\UsuarioController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 
-Route::post('/api/registro', [AuthController::class, 'registro']);
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
+
+Route::post('/registro', [UsuarioController::class, 'store']); 
