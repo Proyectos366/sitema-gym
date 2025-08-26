@@ -13,13 +13,13 @@ class AuthController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'correo' => 'required|string|email|max:255|unique:users',
-            'claveUno' => 'required|string|min:6',
-            'claveDos' => 'required|string|min:6',
+            'claveUno' => 'required|string|min:8',
+            'claveDos' => 'required|string|min:8',
         ]);
 
-        // if ($request->claveUno !== $request->claveDos) {
-        //     return response()->json(['error' => 'Las contraseñas no coinciden'], 422);
-        // }
+          if ($request->claveUno !== $request->claveDos) {
+              return response()->json(['error' => 'Las contraseñas no coinciden'], 422);
+          }
 
         $user = User::create([
             'nombre' => $request->nombre,
