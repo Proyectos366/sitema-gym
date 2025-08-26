@@ -1,0 +1,106 @@
+// Crear las migraciones
+php artisan make:model Usuario -m
+php artisan make:model Membresia -m
+php artisan make:model Entrenador -m
+php artisan make:model Clase -m
+php artisan make:model InscripcionClase -m
+php artisan make:model Pago -m
+
+
+// Definir las migraciones
+
+// Usuarios
+Schema::create('usuarios', function (Blueprint $table) {
+    $table->id();
+    $table->string('nombre');
+    $table->string('correo')->unique();
+    $table->string('clave');
+    $table->enum('rol', ['cliente', 'entrenador', 'admin'])->default('cliente');
+    $table->timestamps();
+});
+
+// Membresias
+Schema::create('membresias', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('usuario_id')->constrained('usuarios')->onDelete('cascade');
+    $table->string('tipo');
+    $table->date('fecha_inicio');
+    $table->date('fecha_fin');
+    $table->enum('estado', ['activa', 'vencida', 'pendiente'])->default('pendiente');
+    $table->timestamps();
+});
+
+// Entrenadores
+Schema::create('entrenadores', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('usuario_id')->constrained('usuarios')->onDelete('cascade');
+    $table->string('especialidad')->nullable();
+    $table->text('biografia')->nullable();
+    $table->timestamps();
+});
+
+// Clases
+Schema::create('clases', function (Blueprint $table) {
+    $table->id();
+    $table->string('titulo');
+    $table->text('descripcion')->nullable();
+    $table->foreignId('entrenador_id')->constrained('entrenadores')->onDelete('cascade');
+    $table->date('fecha');
+    $table->time('hora_inicio');
+    $table->time('hora_fin');
+    $table->integer('capacidad');
+    $table->timestamps();
+});
+
+// Inscriones a clases
+Schema::create('inscripciones_clases', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('usuario_id')->constrained('usuarios')->onDelete('cascade');
+    $table->foreignId('clase_id')->constrained('clases')->onDelete('cascade');
+    $table->enum('estado', ['inscrito', 'cancelado', 'asistido'])->default('inscrito');
+    $table->timestamps();
+});
+
+// Pagos
+Schema::create('pagos', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('usuario_id')->constrained('usuarios')->onDelete('cascade');
+    $table->foreignId('membresia_id')->constrained('membresias')->onDelete('cascade');
+    $table->decimal('monto', 10, 2);
+    $table->date('fecha_pago');
+    $table->string('metodo');
+    $table->enum('estado', ['completado', 'pendiente', 'fallido'])->default('pendiente');
+    $table->timestamps();
+});
+
+
+// Definir las relaciones de los modelos
+// app/Models/Usuario.php
+class Usuario extends Model
+{
+    protected $fillable = ['nombre', 'correo', 'clave', 'rol'];
+
+    public function membresias()
+    {
+        return $this->hasMany(Membresia::class);
+    }
+
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class);
+    }
+
+    public function inscripciones()
+    {
+        return $this->hasMany(InscripcionClase::class);
+    }
+
+    public function entrenador()
+    {
+        return $this->hasOne(Entrenador::class);
+    }
+}
+
+
+// Usar esta migracion
+php artisan migrate

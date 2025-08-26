@@ -7,6 +7,7 @@ import InputCorreo from "../inputs/InputCorreo";
 import InputClave from "../inputs/InputClave";
 import BotonAceptarCancelar from "../botones/BotonAceptarCancelar";
 import MostrarMsj from "../mensaje/MostrarMensaje";
+import LinkPaginas from "../Link";
 
 export default function FormCrearUsuario({
     correo,
@@ -121,6 +122,10 @@ export default function FormCrearUsuario({
                         <MostrarMsj mensaje={mensaje} />
                     </div>
                 )}
+
+                <div>
+                    <LinkPaginas href={'/'} nombre={'Login'} />
+                </div>
 
                 <div className="flex space-x-3">
                     <BotonAceptarCancelar

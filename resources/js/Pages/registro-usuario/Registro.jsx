@@ -6,6 +6,9 @@ import MostarMsjEnModal from "@/Components/mensaje/MostrarMsjEnModal";
 import BotonesModal from "@/Components/botones/BotonesModal";
 import ModalDatos from "@/Components/modales/ModalDatos";
 import FormCrearUsuario from "@/Components/formularios/FormCrearUsuario";
+import Titulos from "@/Components/Titulos";
+import Header from "@/Components/Header";
+import Footer from "@/Components/Footer";
 
 export default function Registro() {
     // 👇 Estados locales
@@ -16,7 +19,7 @@ export default function Registro() {
     const [validarNombre, setValidarNombre] = useState(false);
     const [validarCorreo, setValidarCorreo] = useState(false);
     const [validarClave, setValidarClave] = useState(false);
-    const [todosUsuarios, setTodosUsuarios] = useState("")
+    const [todosUsuarios, setTodosUsuarios] = useState("");
 
     const [mensajeFont, setMensajeFront] = useState("");
 
@@ -58,7 +61,7 @@ export default function Registro() {
             } catch (error) {
                 console.log("Error, al crear el usuario: " + error);
                 console.log(error?.response?.data);
-                
+
                 abrirMensaje(error?.response?.data?.message);
                 ejecutarAccionesConRetraso([
                     { accion: cerrarModal, tiempo: 3000 }, // Se ejecutará en 3 segundos
@@ -101,28 +104,40 @@ export default function Registro() {
                     }}
                 />
             </Modal>
-            <section>
-                <FormCrearUsuario
-                    correo={correo}
-                    setCorreo={setCorreo}
-                    nombre={nombre}
-                    setNombre={setNombre}
-                    claveUno={claveUno}
-                    setClaveUno={setClaveUno}
-                    claveDos={claveDos}
-                    setClaveDos={setClaveDos}
-                    validarCorreo={validarCorreo}
-                    setValidarCorreo={setValidarCorreo}
-                    validarNombre={validarNombre}
-                    setValidarNombre={setValidarNombre}
-                    validarClave={validarClave}
-                    setValidarClave={setValidarClave}
-                    limpiarCampos={limpiarCampos}
-                    mostrarModal={abrirModal}
-                    mensaje={mensajeFont}
-                    setMensaje={setMensajeFront}
-                />
-            </section>
+
+            <div className={`bg-purple-200`}>
+                <div
+                    className={`container mx-auto pt-2 px-2 sm:px-0 grid min-h-dvh grid-rows-[auto_1fr_auto] gap-4 transition-all duration-500 ease-in-out`}
+                >
+                    <Header></Header>
+
+                    <main className="flex flex-col justify-center bg-[#faf5f8] rounded-md p-4">
+                        <Titulos indice={2} titulo={"Crear usuario"} />
+                        <FormCrearUsuario
+                            correo={correo}
+                            setCorreo={setCorreo}
+                            nombre={nombre}
+                            setNombre={setNombre}
+                            claveUno={claveUno}
+                            setClaveUno={setClaveUno}
+                            claveDos={claveDos}
+                            setClaveDos={setClaveDos}
+                            validarCorreo={validarCorreo}
+                            setValidarCorreo={setValidarCorreo}
+                            validarNombre={validarNombre}
+                            setValidarNombre={setValidarNombre}
+                            validarClave={validarClave}
+                            setValidarClave={setValidarClave}
+                            limpiarCampos={limpiarCampos}
+                            mostrarModal={abrirModal}
+                            mensaje={mensajeFont}
+                            setMensaje={setMensajeFront}
+                        />
+                    </main>
+
+                    <Footer></Footer>
+                </div>
+            </div>
         </>
     );
 }
