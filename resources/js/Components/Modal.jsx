@@ -1,65 +1,46 @@
-import {
-    Dialog,
-    DialogPanel,
-    Transition,
-    TransitionChild,
-} from '@headlessui/react';
+import { useEffect } from "react";
+import Titulos from "./Titulos";
 
-export default function Modal({
-    children,
-    show = false,
-    maxWidth = '2xl',
-    closeable = true,
-    onClose = () => {},
-}) {
-    const close = () => {
-        if (closeable) {
-            onClose();
-        }
+export default function Modal({ isVisible, onClose, children, titulo }) {
+  useEffect(() => {
+    if (isVisible) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
     };
+  }, [isVisible]);
 
-    const maxWidthClass = {
-        sm: 'sm:max-w-sm',
-        md: 'sm:max-w-md',
-        lg: 'sm:max-w-lg',
-        xl: 'sm:max-w-xl',
-        '2xl': 'sm:max-w-2xl',
-    }[maxWidth];
+  if (!isVisible) return null;
 
-    return (
-        <Transition show={show} leave="duration-200">
-            <Dialog
-                as="div"
-                id="modal"
-                className="fixed inset-0 z-50 flex transform items-center overflow-y-auto px-4 py-6 transition-all sm:px-0"
-                onClose={close}
-            >
-                <TransitionChild
-                    enter="ease-out duration-300"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
-                    leave="ease-in duration-200"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                >
-                    <div className="absolute inset-0 bg-gray-500/75" />
-                </TransitionChild>
+  return (
+    <div className="fixed inset-0 flex items-center justify-center z-50 px-2 sm:px-0">
+      <div className="absolute inset-0 bg-black opacity-80"></div>
 
-                <TransitionChild
-                    enter="ease-out duration-300"
-                    enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                    enterTo="opacity-100 translate-y-0 sm:scale-100"
-                    leave="ease-in duration-200"
-                    leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                    leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                >
-                    <DialogPanel
-                        className={`mb-6 transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:mx-auto sm:w-full ${maxWidthClass}`}
-                    >
-                        {children}
-                    </DialogPanel>
-                </TransitionChild>
-            </Dialog>
-        </Transition>
-    );
+      <div className="relative flex justify-center items-center bg-white rounded-md shadow-xl px-6 py-6 max-w-lg w-full border border-gray-300 transition-transform transform hover:scale-105">
+        <button
+          className="absolute top-0 right-2 text-gray-700 hover:text-gray-900 cursor-pointer text-3xl transition-opacity opacity-70 hover:opacity-100"
+          onClick={onClose}
+        >
+          &times;
+        </button>
+
+        <div className="flex flex-col items-center w-full space-y-4">
+          <div className="w-full flex justify-center">
+            <Titulos
+              indice={2}
+              className="text-center text-2xl font-semibold text-gray-800"
+              titulo={titulo}
+            />
+          </div>
+
+          <div className="w-full flex flex-col items-center space-y-4">
+            {children}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
