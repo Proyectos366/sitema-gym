@@ -34,7 +34,7 @@ class UsuarioController extends Controller
     } catch (ValidationException $e) {
         return response()->json([
             'status' => 'error',
-            'errors' => $e->errors(),
+            'message' => 'prueba',
         ], 422);
     }
   
