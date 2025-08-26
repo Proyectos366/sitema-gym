@@ -3,4 +3,4 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
-Route::post('/registro', [AuthController::class, 'registro']);
+Route::post('/api/registro', [AuthController::class, 'registro']);
