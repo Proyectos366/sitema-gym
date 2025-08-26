@@ -7,6 +7,6 @@ Route::get('/', function () {
     return Inertia::render('Home');
 });
 
-Route::get('/registro-usuario', function (){
-    return Inertia::render('Registro');
+Route::get('/registro-usuario', function () {
+    return Inertia::render('registro-usuario/Registro');
 });
