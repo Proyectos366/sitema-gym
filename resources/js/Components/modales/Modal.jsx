@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import Titulos from "./Titulos";
+import Titulos from "../Titulos";
 
 export default function Modal({ isVisible, onClose, children, titulo }) {
   useEffect(() => {

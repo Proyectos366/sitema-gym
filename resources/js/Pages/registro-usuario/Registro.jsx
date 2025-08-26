@@ -152,6 +152,11 @@ import InputCorreo from "@/Components/inputs/InputCorreo";
 import InputNombre from "@/Components/inputs/InputNombre";
 import LabelInput from "@/Components/inputs/LabelInput";
 import MostrarMsj from "@/Components/mensaje/MostrarMensaje";
+import Modal from "@/Components/modales/Modal";
+import ModalDatosContenedor from "@/Components/modales/ModalDatosContenedor";
+import MostarMsjEnModal from "@/Components/mensaje/MostrarMsjEnModal";
+import BotonesModal from "@/Components/botones/BotonesModal";
+import ModalDatos from "@/Components/modales/ModalDatos";
 
 export default function Registro() {
     // 👇 Estados locales
@@ -163,8 +168,10 @@ export default function Registro() {
     const [validarCorreo, setValidarCorreo] = useState(false);
     const [validarClave, setValidarClave] = useState(false);
 
+    const [mostrarMensaje, setMostrarMensaje] = useState("")
+
     // 👇 Funciones del contexto
-    const { mensaje, mostrarModal, abrirMensaje, limpiarCampos } = useUser();
+    const { mensaje, mostrar, cerrarModal, mostrarModal, abrirMensaje, limpiarCampos } = useUser();
 
     // 👇 Funciones de validación
     const leyendoClave1 = (e) => {
@@ -202,92 +209,163 @@ export default function Registro() {
         }
     };
 
+
+    const crearUsuario = async () => {
+    if (nombre.trim()) {
+      try {
+        const response = await axios.post("/api/registro", {
+          nombre: nombre,
+          correo: correo,
+          claveUno: claveUno,
+          claveDos: claveDos
+        });
+
+        console.log(response.data);
+        
+        setTodosUsuarios([...todosUsuarios, response.data.usuarios]); // Suponiendo que la API devuelve el nombre guardado
+        abrirMensaje(response.data.message);
+
+        ejecutarAccionesConRetraso([
+          { accion: cerrarModal, tiempo: 3000 }, // Se ejecutará en 3 segundos
+          { accion: () => setNombre(""), tiempo: 3000 }, // Se ejecutará en 3 segundos
+          { accion: () => setCorreo(""), tiempo: 3000 }, // Se ejecutará en 3 segundos
+          { accion: () => setClaveUno(""), tiempo: 3000 }, // Se ejecutará en 3 segundos
+          { accion: () => setClaveDos(""), tiempo: 3000 }, // Se ejecutará en 3 segundos
+        ]);
+      } catch (error) {
+        console.log("Error, al crear el usuario: " + error);
+        abrirMensaje(error?.response?.data?.message);
+        ejecutarAccionesConRetraso([
+          { accion: cerrarModal, tiempo: 3000 }, // Se ejecutará en 3 segundos
+        ]);
+      }
+    }
+  };
+
     return (
-        <section>
-            <Formulario onSubmit={(e) => e.preventDefault()} className="">
-                <div className="flex flex-col w-full gap-2 px-1">
-                    <LabelInput nombre={"Nombre"}>
-                        <InputNombre
-                            type="text"
-                            indice="nombre"
-                            value={nombre}
-                            setValue={setNombre}
-                            validarNombre={validarNombre}
-                            setValidarNombre={setValidarNombre}
-                        />
-                    </LabelInput>
+        <>
+            <Modal
+                isVisible={mostrar}
+                onClose={cerrarModal}
+                titulo={"¿Crear este usuario?"}
+            >
+                <ModalDatosContenedor>
+                    <ModalDatos titulo={"Nombre"} descripcion={nombre} />
+                    <ModalDatos
+                        titulo={"Correo"}
+                        descripcion={correo}
+                    />
+                    <ModalDatos titulo={"Clave uno"} descripcion={claveUno} />
+                    <ModalDatos titulo={"Clave dos"} descripcion={claveDos} />
 
-                    <LabelInput nombre={"Correo"}>
-                        <InputCorreo
-                            type="text"
-                            indice="email"
-                            value={correo}
-                            setValue={setCorreo}
-                            validarCorreo={validarCorreo}
-                            setValidarCorreo={setValidarCorreo}
-                        />
-                    </LabelInput>
+                </ModalDatosContenedor>
 
-                    <LabelInput nombre={"Clave"}>
-                        <InputClave
-                            type={"password"}
-                            value={claveUno}
-                            onChange={leyendoClave1}
-                            indice={"clave"}
-                            validarClave={validarClave}
-                            setValidarClave={setValidarClave}
-                        />
-                    </LabelInput>
+                <MostarMsjEnModal
+                    mostrarMensaje={mostrarMensaje}
+                    mensaje={mensaje}
+                />
 
-                    <LabelInput nombre={"Clave confirmar"}>
-                        <InputClave
-                            type={"password"}
-                            value={claveDos}
-                            onChange={leyendoClave2}
-                            indice={"clave2"}
-                        />
-                    </LabelInput>
+                <BotonesModal
+                    aceptar={crearUsuario}
+                    cancelar={cerrarModal}
+                    indiceUno={"crear"}
+                    indiceDos={"cancelar"}
+                    nombreUno={"Aceptar"}
+                    nombreDos={"Cancelar"}
+                    campos={{
+                        nombre,
+                        correo,
+                        claveUno,
+                        claveDos,
+                    }}
+                />
+            </Modal>
+            <section>
+                <Formulario onSubmit={(e) => e.preventDefault()} className="">
+                    <div className="flex flex-col w-full gap-2 px-1">
+                        <LabelInput nombre={"Nombre"}>
+                            <InputNombre
+                                type="text"
+                                indice="nombre"
+                                value={nombre}
+                                setValue={setNombre}
+                                validarNombre={validarNombre}
+                                setValidarNombre={setValidarNombre}
+                            />
+                        </LabelInput>
 
-                    {mensaje && (
-                        <div className="w-full">
-                            <MostrarMsj mensaje={mensaje} />
+                        <LabelInput nombre={"Correo"}>
+                            <InputCorreo
+                                type="text"
+                                indice="email"
+                                value={correo}
+                                setValue={setCorreo}
+                                validarCorreo={validarCorreo}
+                                setValidarCorreo={setValidarCorreo}
+                            />
+                        </LabelInput>
+
+                        <LabelInput nombre={"Clave"}>
+                            <InputClave
+                                type={"password"}
+                                value={claveUno}
+                                onChange={leyendoClave1}
+                                indice={"clave"}
+                                validarClave={validarClave}
+                                setValidarClave={setValidarClave}
+                            />
+                        </LabelInput>
+
+                        <LabelInput nombre={"Clave confirmar"}>
+                            <InputClave
+                                type={"password"}
+                                value={claveDos}
+                                onChange={leyendoClave2}
+                                indice={"clave2"}
+                            />
+                        </LabelInput>
+
+                        {mensaje && (
+                            <div className="w-full">
+                                <MostrarMsj mensaje={mensaje} />
+                            </div>
+                        )}
+
+                        <div className="flex space-x-4">
+                            <BotonAceptarCancelar
+                                indice={"aceptar"}
+                                aceptar={mostrarModal}
+                                nombre={"Crear"}
+                                campos={{
+                                    nombre,
+                                    correo,
+                                    claveUno,
+                                    claveDos,
+                                }}
+                            />
+
+                            <BotonAceptarCancelar
+                                indice={"limpiar"}
+                                aceptar={() => {
+                                    limpiarCampos({
+                                        setNombre,
+                                        setCorreo,
+                                        setClaveUno,
+                                        setClaveDos,
+                                    });
+                                }}
+                                nombre={"Limpiar"}
+                                campos={{
+                                    nombre,
+                                    correo,
+                                    claveUno,
+                                    claveDos,
+                                }}
+                            />
                         </div>
-                    )}
-
-                    <div className="flex space-x-4">
-                        <BotonAceptarCancelar
-                            indice={"aceptar"}
-                            aceptar={mostrarModal}
-                            nombre={"Crear"}
-                            campos={{
-                                nombre,
-                                correo,
-                                claveUno,
-                                claveDos,
-                            }}
-                        />
-
-                        <BotonAceptarCancelar
-                            indice={"limpiar"}
-                            aceptar={() => {
-                                limpiarCampos({
-                                    setNombre,
-                                    setCorreo,
-                                    setClaveUno,
-                                    setClaveDos,
-                                });
-                            }}
-                            nombre={"Limpiar"}
-                            campos={{
-                                nombre,
-                                correo,
-                                claveUno,
-                                claveDos,
-                            }}
-                        />
                     </div>
-                </div>
-            </Formulario>
-        </section>
+                </Formulario>
+            </section>
+        </>
     );
 }
