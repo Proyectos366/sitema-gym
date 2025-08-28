@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useUser } from "@/contexts/UserContext";
-import { router } from '@inertiajs/react';
+import { router } from "@inertiajs/react";
 import Modal from "@/Components/modales/Modal";
 import ModalDatosContenedor from "@/Components/modales/ModalDatosContenedor";
 import MostarMsjEnModal from "@/Components/mensaje/MostrarMsjEnModal";
@@ -47,16 +47,6 @@ export default function Registro() {
     const crearUsuario = async () => {
         if (nombre.trim()) {
             try {
-                console.log(
-                    cedula,
-                    nombre,
-                    apellido,
-                    correo,
-                    especialidad,
-                    claveUno,
-                    claveDos
-                );
-
                 const response = await axios.post("/api/registro", {
                     cedula: cedula,
                     nombre: nombre,
@@ -68,7 +58,6 @@ export default function Registro() {
                 });
 
                 console.log(response.data);
-                
 
                 setTodosUsuarios([...todosUsuarios, response.data.usuarios]); // Suponiendo que la API devuelve el nombre guardado
                 abrirMensaje(response.data.message);
@@ -84,11 +73,7 @@ export default function Registro() {
                     { accion: () => setClaveDos(""), tiempo: 3000 }, // Se ejecutará en 3 segundos
                 ]);
 
-                
-                
-
-router.visit(response.data.redirect);
-                
+                router.visit(response.data.redirect);
             } catch (error) {
                 console.log("Error, al crear el usuario: " + error);
                 console.log(error?.response?.data);

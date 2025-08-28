@@ -28,9 +28,9 @@ class UsuarioController extends Controller
     try {
         $validated = UsuarioValidator::validar($request->all());
 
-        print_r($validated);
+        
 
-        Usuario::create([
+        $usuario = Usuario::create([
             'cedula' => $validated['cedula'],
             'nombre' => $validated['nombre'],
             'apellido' => $validated['apellido'],
@@ -44,7 +44,7 @@ class UsuarioController extends Controller
             'status' => 'ok',
             'message' => 'Usuario creado',
             'redirect' => '/',
-            'usuarios' => [], // Puedes retornar el usuario si lo deseas
+            'usuarios' => $usuario, // Puedes retornar el usuario si lo deseas
         ]);
     } catch (ValidationException $e) {
         return response()->json([
