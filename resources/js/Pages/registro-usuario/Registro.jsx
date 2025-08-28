@@ -12,12 +12,19 @@ import Footer from "@/Components/Footer";
 
 export default function Registro() {
     // 👇 Estados locales
+    const [cedula, setCedula] = useState("");
     const [nombre, setNombre] = useState("");
+    const [apellido, setApellido] = useState("");
     const [correo, setCorreo] = useState("");
+    const [especialidad, setEspecialidad] = useState("");
     const [claveUno, setClaveUno] = useState("");
     const [claveDos, setClaveDos] = useState("");
+
+    const [validarCedula, setValidarCedula] = useState(false);
     const [validarNombre, setValidarNombre] = useState(false);
+    const [validarApellido, setValidarApellido] = useState(false);
     const [validarCorreo, setValidarCorreo] = useState(false);
+    const [validarEspecialidad, setValidarEspecialidad] = useState(false);
     const [validarClave, setValidarClave] = useState(false);
     const [todosUsuarios, setTodosUsuarios] = useState("");
 
@@ -39,9 +46,22 @@ export default function Registro() {
     const crearUsuario = async () => {
         if (nombre.trim()) {
             try {
+                console.log(
+                    cedula,
+                    nombre,
+                    apellido,
+                    correo,
+                    especialidad,
+                    claveUno,
+                    claveDos
+                );
+
                 const response = await axios.post("/api/registro", {
+                    cedula: cedula,
                     nombre: nombre,
+                    apellido: apellido,
                     correo: correo,
+                    especialidad: especialidad,
                     claveUno: claveUno,
                     claveDos: claveDos,
                 });
@@ -53,8 +73,11 @@ export default function Registro() {
 
                 ejecutarAccionesConRetraso([
                     { accion: cerrarModal, tiempo: 3000 }, // Se ejecutará en 3 segundos
+                    { accion: () => setCedula(""), tiempo: 3000 }, // Se ejecutará en 3 segundos
                     { accion: () => setNombre(""), tiempo: 3000 }, // Se ejecutará en 3 segundos
+                    { accion: () => setApellido(""), tiempo: 3000 }, // Se ejecutará en 3 segundos
                     { accion: () => setCorreo(""), tiempo: 3000 }, // Se ejecutará en 3 segundos
+                    { accion: () => setEspecialidad(""), tiempo: 3000 }, // Se ejecutará en 3 segundos
                     { accion: () => setClaveUno(""), tiempo: 3000 }, // Se ejecutará en 3 segundos
                     { accion: () => setClaveDos(""), tiempo: 3000 }, // Se ejecutará en 3 segundos
                 ]);
@@ -78,10 +101,24 @@ export default function Registro() {
                 titulo={"¿Crear este usuario?"}
             >
                 <ModalDatosContenedor>
+                    <ModalDatos titulo={"Cedula"} descripcion={cedula} />
                     <ModalDatos titulo={"Nombre"} descripcion={nombre} />
+                    <ModalDatos titulo={"Apellido"} descripcion={apellido} />
                     <ModalDatos titulo={"Correo"} descripcion={correo} />
-                    <ModalDatos titulo={"Clave uno"} descripcion={claveUno} />
-                    <ModalDatos titulo={"Clave dos"} descripcion={claveDos} />
+                    <ModalDatos
+                        titulo={"Especialidad"}
+                        descripcion={especialidad}
+                    />
+                    <ModalDatos
+                        titulo={"Clave uno"}
+                        descripcion={claveUno}
+                        indice={1}
+                    />
+                    <ModalDatos
+                        titulo={"Clave dos"}
+                        descripcion={claveDos}
+                        indice={1}
+                    />
                 </ModalDatosContenedor>
 
                 <MostarMsjEnModal
@@ -97,8 +134,11 @@ export default function Registro() {
                     nombreUno={"Aceptar"}
                     nombreDos={"Cancelar"}
                     campos={{
+                        cedula,
                         nombre,
+                        apellido,
                         correo,
+                        especialidad,
                         claveUno,
                         claveDos,
                     }}
@@ -114,18 +154,30 @@ export default function Registro() {
                     <main className="flex flex-col justify-center bg-[#faf5f8] rounded-md p-4">
                         <Titulos indice={2} titulo={"Crear usuario"} />
                         <FormCrearUsuario
-                            correo={correo}
-                            setCorreo={setCorreo}
+                            cedula={cedula}
+                            setCedula={setCedula}
                             nombre={nombre}
                             setNombre={setNombre}
+                            apellido={apellido}
+                            setApellido={setApellido}
+                            correo={correo}
+                            setCorreo={setCorreo}
+                            especialidad={especialidad}
+                            setEspecialidad={setEspecialidad}
                             claveUno={claveUno}
                             setClaveUno={setClaveUno}
                             claveDos={claveDos}
                             setClaveDos={setClaveDos}
-                            validarCorreo={validarCorreo}
-                            setValidarCorreo={setValidarCorreo}
+                            validarCedula={validarCedula}
+                            setValidarCedula={setValidarCedula}
                             validarNombre={validarNombre}
                             setValidarNombre={setValidarNombre}
+                            validarApellido={validarApellido}
+                            setValidarApellido={setValidarApellido}
+                            validarCorreo={validarCorreo}
+                            setValidarCorreo={setValidarCorreo}
+                            validarEspecialidad={validarEspecialidad}
+                            setValidarEspecialidad={setValidarEspecialidad}
                             validarClave={validarClave}
                             setValidarClave={setValidarClave}
                             limpiarCampos={limpiarCampos}

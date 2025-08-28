@@ -8,20 +8,33 @@ import InputClave from "../inputs/InputClave";
 import BotonAceptarCancelar from "../botones/BotonAceptarCancelar";
 import MostrarMsj from "../mensaje/MostrarMensaje";
 import LinkPaginas from "../Link";
+import InputCedula from "../inputs/InputCedula";
 
 export default function FormCrearUsuario({
-    correo,
-    setCorreo,
+    cedula,
+    setCedula,
     nombre,
     setNombre,
+    apellido,
+    setApellido,
+    correo,
+    setCorreo,
+    especialidad,
+    setEspecialidad,
     claveUno,
     setClaveUno,
     claveDos,
     setClaveDos,
-    validarCorreo,
-    setValidarCorreo,
+    validarCedula,
+    setValidarCedula,
     validarNombre,
     setValidarNombre,
+    validarApellido,
+    setValidarApellido,
+    validarCorreo,
+    setValidarCorreo,
+    validarEspecialidad,
+    setValidarEspecialidad,
     validarClave,
     setValidarClave,
     limpiarCampos,
@@ -75,6 +88,17 @@ export default function FormCrearUsuario({
     return (
         <Formulario onSubmit={(e) => e.preventDefault()} className="">
             <div className="flex flex-col w-full gap-2 px-1">
+                <LabelInput nombre={"Cedula"}>
+                    <InputCedula
+                        type="text"
+                        indice={"cedula"}
+                        value={cedula}
+                        setValue={setCedula}
+                        validarCedula={validarCedula}
+                        setValidarCedula={setValidarCedula}
+                    />
+                </LabelInput>
+
                 <LabelInput nombre={"Nombre"}>
                     <InputNombre
                         type="text"
@@ -86,6 +110,17 @@ export default function FormCrearUsuario({
                     />
                 </LabelInput>
 
+                <LabelInput nombre={"Apellido"}>
+                    <InputNombre
+                        type={"text"}
+                        indice={"nombre"}
+                        value={apellido}
+                        setValue={setApellido}
+                        validarNombre={validarApellido}
+                        setValidarNombre={setValidarApellido}
+                    />
+                </LabelInput>
+
                 <LabelInput nombre={"Correo"}>
                     <InputCorreo
                         type="text"
@@ -94,6 +129,17 @@ export default function FormCrearUsuario({
                         setValue={setCorreo}
                         validarCorreo={validarCorreo}
                         setValidarCorreo={setValidarCorreo}
+                    />
+                </LabelInput>
+
+                <LabelInput nombre={"Especialidad"}>
+                    <InputNombre
+                        type={"text"}
+                        indice={"nombre"}
+                        value={especialidad}
+                        setValue={setEspecialidad}
+                        validarNombre={validarEspecialidad}
+                        setValidarNombre={setValidarEspecialidad}
                     />
                 </LabelInput>
 
@@ -124,7 +170,7 @@ export default function FormCrearUsuario({
                 )}
 
                 <div>
-                    <LinkPaginas href={'/'} nombre={'Login'} />
+                    <LinkPaginas href={"/"} nombre={"Login"} />
                 </div>
 
                 <div className="flex space-x-3">
@@ -133,18 +179,38 @@ export default function FormCrearUsuario({
                         aceptar={mostrarModal}
                         nombre={"Crear"}
                         campos={{
+                            cedula,
                             nombre,
+                            apellido,
+                            correo,
+                            especialidad,
+                            claveUno,
+                            claveDos,
                         }}
                     />
 
                     <BotonAceptarCancelar
                         indice={"limpiar"}
                         aceptar={() => {
-                            limpiarCampos({ setNombre });
+                            limpiarCampos({
+                                setCedula,
+                                setNombre,
+                                setApellido,
+                                setCorreo,
+                                setEspecialidad,
+                                setClaveUno,
+                                setClaveDos,
+                            });
                         }}
                         nombre={"Limpiar"}
                         campos={{
+                            cedula,
                             nombre,
+                            apellido,
+                            correo,
+                            especialidad,
+                            claveUno,
+                            claveDos,
                         }}
                     />
                 </div>
